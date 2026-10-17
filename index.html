@@ -3,106 +3,208 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Project Meridian - Workforce Capability Engine</title>
+    <title>Project Meridian - Talent Redeployment Engine</title>
     <style>
-        :root { --primary: #1e3a8a; --secondary: #2563eb; --accent: #f59e0b; --bg: #f8fafc; --card-bg: #ffffff; --text-main: #0f172a; --text-muted: #64748b; --border: #e2e8f0; --danger: #ef4444; --success: #10b981; }
-        * { box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, sans-serif; }
-        body { background-color: var(--bg); color: var(--text-main); padding: 20px; max-width: 1200px; margin: 0 auto; }
-        header { background-color: var(--primary); color: white; padding: 20px; border-radius: 12px; margin-bottom: 20px; display: flex; justify-content: space-between; align-items: center; }
-        header h1 { font-size: 18px; font-weight: 700; }
-        header p { font-size: 12px; color: #93c5fd; }
-        .badge-bumn { background: rgba(255,255,255,0.2); padding: 6px 12px; border-radius: 20px; font-size: 11px; font-weight: 600; }
-        .stats-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 12px; margin-bottom: 20px; }
-        .stat-card { background: var(--card-bg); padding: 14px; border-radius: 10px; border: 1px solid var(--border); }
-        .stat-card .label { font-size: 11px; color: var(--text-muted); text-transform: uppercase; font-weight: 600; }
-        .stat-card .value { font-size: 20px; font-weight: 700; margin-top: 4px; }
-        .main-content { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 20px; }
-        .panel { background: var(--card-bg); border-radius: 12px; border: 1px solid var(--border); padding: 16px; }
-        .panel-title { font-size: 15px; font-weight: 700; margin-bottom: 12px; display: flex; justify-content: space-between; }
-        .employee-card { border: 1px solid var(--border); padding: 12px; border-radius: 8px; cursor: pointer; margin-bottom: 10px; transition: 0.2s; }
-        .employee-card:hover, .employee-card.active { border-color: var(--secondary); background: #eff6ff; }
-        .risk-tag { background: #fef2f2; color: var(--danger); border: 1px solid #fecaca; padding: 2px 6px; border-radius: 4px; font-size: 10px; font-weight: 700; }
-        .aha-card { background: linear-gradient(135deg, #eff6ff 0%, #e0e7ff 100%); border: 2px solid var(--secondary); border-radius: 10px; padding: 16px; margin-top: 12px; position: relative; }
-        .aha-badge { position: absolute; top: 10px; right: 10px; background: var(--accent); color: #000; font-size: 9px; font-weight: 800; padding: 3px 6px; border-radius: 10px; }
-        .btn-action { width: 100%; background: var(--secondary); color: white; border: none; padding: 10px; border-radius: 8px; font-weight: 600; margin-top: 12px; cursor: pointer; }
+        :root {
+            --primary: #1e3a8a;
+            --secondary: #3b82f6;
+            --accent: #10b981;
+            --bg: #f8fafc;
+            --card-bg: #ffffff;
+            --text: #1e293b;
+            --text-muted: #64748b;
+        }
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
+        body { background-color: var(--bg); color: var(--text); padding: 16px; line-height: 1.5; }
+        .container { max-width: 600px; margin: 0 auto; }
+        
+        /* Header */
+        header { background: linear-gradient(135deg, var(--primary), var(--secondary)); color: white; padding: 20px; border-radius: 12px; margin-bottom: 20px; box-shadow: 0 4px 6px rgba(0,0,0,0.05); }
+        .header-top { display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; }
+        h1 { font-size: 1.25rem; font-weight: 700; }
+        .badge { background: rgba(255,255,255,0.2); padding: 4px 10px; border-radius: 20px; font-size: 0.75rem; font-weight: 600; letter-spacing: 0.5px; }
+        .subtitle { font-size: 0.85rem; opacity: 0.9; }
+
+        /* Metrics Grid */
+        .metrics-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; margin-bottom: 20px; }
+        .metric-card { background: var(--card-bg); padding: 16px; border-radius: 10px; box-shadow: 0 2px 4px rgba(0,0,0,0.02); border-left: 4px solid var(--secondary); }
+        .metric-card.success { border-left-color: var(--accent); }
+        .metric-label { font-size: 0.75rem; color: var(--text-muted); text-transform: uppercase; font-weight: 600; margin-bottom: 4px; }
+        .metric-value { font-size: 1.25rem; font-weight: 700; color: var(--primary); }
+        .metric-value.success { color: var(--accent); }
+
+        /* Section Card */
+        .card { background: var(--card-bg); padding: 20px; border-radius: 12px; box-shadow: 0 2px 4px rgba(0,0,0,0.02); margin-bottom: 20px; }
+        .section-title { font-size: 1rem; font-weight: 700; margin-bottom: 12px; color: var(--primary); display: flex; align-items: center; gap: 8px; }
+
+        /* Employee Selectors */
+        .employee-list { display: flex; flex-direction: column; gap: 8px; }
+        .employee-btn { background: #f1f5f9; border: 1px solid #e2e8f0; padding: 12px 16px; border-radius: 8px; text-align: left; cursor: pointer; transition: all 0.2s; display: flex; justify-content: space-between; align-items: center; }
+        .employee-btn:hover { background: #e2e8f0; }
+        .employee-btn.active { background: #eff6ff; border-color: var(--secondary); box-shadow: 0 0 0 1px var(--secondary); }
+        .emp-name { font-weight: 600; font-size: 0.95srem; color: var(--text); }
+        .emp-meta { font-size: 0.8rem; color: var(--text-muted); }
+        .risk-badge { background: #fee2e2; color: #dc2626; padding: 2px 8px; border-radius: 6px; font-size: 0.75rem; font-weight: 600; }
+
+        /* Simulation Detail Panel */
+        .simulation-result { margin-top: 16px; border-top: 1px solid #e2e8f0; padding-top: 16px; display: none; }
+        .simulation-result.active { display: block; animation: fadeIn 0.3s ease; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(4px); } to { opacity: 1; transform: translateY(0); } }
+
+        .result-row { display: flex; justify-content: space-between; margin-bottom: 8px; font-size: 0.875rem; }
+        .result-label { color: var(--text-muted); }
+        .result-val { font-weight: 600; color: var(--text); }
+        
+        .progress-bar-container { background: #e2e8f0; border-radius: 4px; height: 8px; width: 100%; margin-top: 6px; overflow: hidden; }
+        .progress-bar { background: var(--accent); height: 100%; width: 0%; transition: width 0.5s ease; }
+
+        footer { text-align: center; font-size: 0.75rem; color: var(--text-muted); margin-top: 20px; }
     </style>
 </head>
 <body>
+
+<div class="container">
+    <!-- Header -->
     <header>
-        <div>
-            <h1>Project Meridian — Capability Engine</h1>
-            <p>BUMN Energy Talent Transformation</p>
+        <div class="header-top">
+            <h1>Project Meridian</h1>
+            <span class="badge">ENTERPRISE HR ANALYTICS</span>
         </div>
-        <div class="badge-bumn">CONFIDENTIAL</div>
+        <p class="subtitle">BUMN Energy Talent Transition & Smart Grid Redeployment Engine</p>
     </header>
 
-    <div class="stats-grid">
-        <div class="stat-card">
-            <div class="label">Pekerja Terdampak</div>
-            <div class="value" style="color: var(--danger);">4,200</div>
+    <!-- Metrics Grid -->
+    <div class="metrics-grid">
+        <div class="metric-card">
+            <div class="metric-label">Pekerja Terdampak</div>
+            <div class="metric-value">4,200</div>
         </div>
-        <div class="stat-card">
-            <div class="label">Mandat Kebijakan</div>
-            <div class="value" style="color: var(--success);">0 Layoff</div>
+        <div class="metric-card success">
+            <div class="metric-label">Kebijakan Restrukturisasi</div>
+            <div class="metric-value success">0 Layoff</div>
         </div>
-        <div class="stat-card">
-            <div class="label">Target Waktu</div>
-            <div class="value" style="color: var(--secondary);">90 Hari</div>
+        <div class="metric-card">
+            <div class="metric-label">Target Eksekusi</div>
+            <div class="metric-value">90 Hari</div>
         </div>
-        <div class="stat-card">
-            <div class="label">Est. Penghematan</div>
-            <div class="value" style="color: var(--primary);">Rp 437.5 M</div>
+        <div class="metric-card success">
+            <div class="metric-label">Estimasi Penghematan</div>
+            <div class="metric-value success">Rp 437.5 M</div>
         </div>
     </div>
 
-    <div class="main-content">
-        <div class="panel">
-            <div class="panel-title">Pilih Sampel Pegawai</div>
-            <div id="employeeList"></div>
+    <!-- Interactive Simulator Section -->
+    <div class="card">
+        <div class="section-title">
+            <span>⚙️ Talent Readiness & Transition Simulator</span>
         </div>
-        <div class="panel" id="detailPanel"></div>
+        <p style="font-size: 0.85rem; color: var(--text-muted); margin-bottom: 14px;">
+            Pilih profil sampel pegawai lapangan untuk melihat matriks kecocokan skill dan jalur penempatan baru (*reskilling path*):
+        </p>
+
+        <div class="employee-list">
+            <button class="employee-btn" onclick="selectEmployee(0)">
+              <div>
+                <div class="emp-name">Budi Santoso</div>
+                <div class="emp-meta">Field Metering Specialist • 14 Tahun Masa Kerja</div>
+              </div>
+              <span class="risk-badge">AI Risk: 88%</span>
+            </button>
+
+            <button class="employee-btn" onclick="selectEmployee(1)">
+              <div>
+                <div class="emp-name">Siti Rahmawati</div>
+                <div class="emp-meta">Senior Meter Reader II • 9 Tahun Masa Kerja</div>
+              </div>
+              <span class="risk-badge">AI Risk: 82%</span>
+            </button>
+
+            <button class="employee-btn" onclick="selectEmployee(2)">
+              <div>
+                <div class="emp-name">Ahmad Hidayat</div>
+                <div class="emp-meta">Senior Field Inspector • 12 Tahun Masa Kerja</div>
+              </div>
+              <span class="risk-badge">AI Risk: 85%</span>
+            </button>
+        </div>
+
+        <!-- Dynamic Output Panel -->
+        <div id="simResult" class="simulation-result">
+            <h3 id="resTitle" style="font-size: 0.95rem; font-weight: 700; color: var(--primary); margin-bottom: 12px;">Analisis Transisi Karir</h3>
+            
+            <div class="result-row">
+                <span class="result-label">Jabatan Baru (Target):</span>
+                <span id="resTargetRole" class="result-val">-</span>
+            </div>
+            <div class="result-row">
+                <span class="result-label">Durasi Modul Upskilling:</span>
+                <span id="resDuration" class="result-val">-</span>
+            </div>
+            <div class="result-row">
+                <span class="result-label">Kecocokan Kompetensi (Match Rate):</span>
+                <span id="resMatch" class="result-val" style="color: var(--accent);">-</span>
+            </div>
+            <div class="progress-bar-container">
+                <div id="resProgressBar" class="progress-bar"></div>
+            </div>
+            
+            <div style="margin-top: 12px; background: #f8fafc; padding: 10px; border-radius: 6px; font-size: 0.8rem; color: var(--text-muted);">
+                <strong>Status Validasi Sistem:</strong> Memenuhi standar kelayakan penempatan internal tanpa pemutusan hubungan kerja.
+            </div>
+        </div>
     </div>
 
-    <script>
-        const employees = [
-            { id: "EMP-48213", name: "Budi Santoso", tenure: "14 Tahun", role: "Field Metering Specialist", risk: "88%", skills: "Pemahaman Lapangan, Jaringan Lokal", target: "IoT Field Maintenance Specialist", match: "85%", time: "4 Minggu", savings: "Rp 120 Juta" },
-            { id: "EMP-39102", name: "Siti Rahmawati", tenure: "9 Tahun", role: "Senior Meter Reader II", risk: "82%", skills: "Akurasi Data, Komunikasi Pelanggan", target: "Digital Energy Advisor", match: "88%", time: "3 Minggu", savings: "Rp 95 Juta" },
-            { id: "EMP-51204", name: "Ahmad Hidayat", tenure: "18 Tahun", role: "Teknisi Pengawas Meteran", risk: "75%", skills: "Supervisi Lapangan, Audit K3", target: "Grid Asset Auditor & Supervisor", match: "92%", time: "2 Minggu", savings: "Rp 140 Juta" }
-        ];
+    <footer>
+        Project Meridian • BUMN Transformation Initiative © 2026
+    </footer>
+</div>
 
-        function render() {
-            const list = document.getElementById('employeeList');
-            list.innerHTML = '';
-            employees.forEach((emp, i) => {
-                list.innerHTML += `
-                    <div class="employee-card ${i===0?'active':''}" onclick="selectEmp(${i})">
-                        <div style="font-weight:600; font-size:13px;">${emp.name}</div>
-                        <div style="font-size:11px; color:#64748b;">${emp.role} • ${emp.tenure}</div>
-                        <div style="margin-top:4px;"><span class="risk-tag">AI Risk: ${emp.risk}</span></div>
-                    </div>`;
-            });
-            selectEmp(0);
+<script>
+    const employeeData = [
+        {
+            name: "Budi Santoso",
+            target: "IoT Field Maintenance Specialist",
+            duration: "4 Minggu (Blended Learning)",
+            match: "85%"
+        },
+        {
+            name: "Siti Rahmawati",
+            target: "Digital Energy Advisor & Smart Billing Support",
+            duration: "3 Minggu (Customer System Module)",
+            match: "89%"
+        },
+        {
+            name: "Ahmad Hidayat",
+            target: "Smart Grid Infrastructure Technician",
+            duration: "4 Minggu (Technical Upgrading)",
+            match: "82%"
         }
+    ];
 
-        function selectEmp(i) {
-            document.querySelectorAll('.employee-card').forEach((c, idx) => c.classList.toggle('active', idx === i));
-            const emp = employees[i];
-            document.getElementById('detailPanel').innerHTML = `
-                <div class="panel-title">Simulasi Peran Baru (ID: ${emp.id})</div>
-                <h3 style="color:var(--primary);">${emp.name}</h3>
-                <p style="font-size:12px; color:#64748b;">${emp.role}</p>
-                <div class="aha-card">
-                    <div class="aha-badge">Momen AHA!</div>
-                    <div style="font-size:11px; color:#64748b;">Rekomendasi Jabatan Baru</div>
-                    <div style="font-size:15px; font-weight:700; color:var(--primary); margin-top:2px;">${emp.target}</div>
-                    <div style="margin-top:10px; font-size:12px;">
-                        <div><strong>Match Rate:</strong> ${emp.match}</div>
-                        <div><strong>Lama Reskilling:</strong> ${emp.time}</div>
-                    </div>
-                </div>
-                <button class="btn-action" onclick="alert('Rekomendasi Disetujui!')">Disetujui untuk Reskilling</button>`;
-        }
-        document.addEventListener('DOMContentLoaded', render);
-    </script>
+    function selectEmployee(index) {
+        const buttons = document.querySelectorAll('.employee-btn');
+        buttons.forEach((btn, idx) => {
+            if(idx === index) {
+                btn.classList.add('active');
+            } else {
+                btn.classList.remove('active');
+            }
+        });
+
+        const data = employeeData[index];
+        const resultPanel = document.getElementById('simResult');
+        
+        document.getElementById('resTitle').innerText = `Hasil Pemetaan Kompetensi: ${data.name}`;
+        document.getElementById('resTargetRole').innerText = data.target;
+        document.getElementById('resDuration').innerText = data.duration;
+        document.getElementById('resMatch').innerText = data.match;
+        
+        const progressBar = document.getElementById('resProgressBar');
+        progressBar.style.width = data.match;
+
+        resultPanel.classList.add('active');
+    }
+</script>
+
 </body>
 </html>
